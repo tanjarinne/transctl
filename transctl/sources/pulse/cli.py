@@ -31,7 +31,7 @@ def extract(**kwargs):
 
 
 def _extract_lines_from_file(file: str, pwd: str = "") -> list:
-  if not os.path.exists(file): raise FileExistsError(f'No such file: {file}')
+  if not os.path.isfile(file): raise FileExistsError(f'No such file: {file}')
 
   args = f"pdftotext -enc UTF-8 -simple2 -opw {pwd} {file} -".split()
   result = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
