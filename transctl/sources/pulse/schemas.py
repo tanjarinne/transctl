@@ -33,8 +33,8 @@ class PulseSchema(Schema):
 
 class BiochemistrySchema(PulseSchema):
   test                   = fields.Str(required=True)
-  test_chinese           = fields.Str()
-  si_result              = SIResult()
+  test_chinese           = fields.Str(required=True)
+  si_result              = SIResult(required=True)
   si_unit                = fields.Str(required=True)
   si_reference           = fields.Str(required=True)
   conventional_result    = ConventionalResult()
@@ -43,16 +43,30 @@ class BiochemistrySchema(PulseSchema):
 
 
 class EndocrinologySchema(PulseSchema):
-  pass
+  test                   = fields.Str(required=True)
+  test_chinese           = fields.Str(required=True)
+  si_result              = SIResult(required=True)
+  si_unit                = fields.Str(required=True)
+  si_reference           = fields.Str(required=True)
+  conventional_result    = ConventionalResult()
+  conventional_unit      = fields.Str()
+  conventional_reference = fields.Str()
 
 
 class SerologySchema(PulseSchema):
-  pass
+  test         = fields.Str(required=True)
+  test_chinese = fields.Str(required=True)
+  result       = fields.Str(required=True)
+  unit         = fields.Str(required=True, allow_none=True)
+  reference    = fields.Str(required=True)
 
 
 class HaematologySchema(PulseSchema):
-  pass
-
+  test         = fields.Str(required=True)
+  test_chinese = fields.Str()
+  si_result    = SIResult()
+  si_unit      = fields.Str(required=True)
+  si_reference = fields.Str(required=True)
 
 
 schemas = {
