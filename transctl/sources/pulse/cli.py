@@ -13,14 +13,9 @@ def extract(**kwargs):
   output = kwargs.get('output')
 
   if not file: raise ValueError('Pulse needs a file')
-  if not pwd: raise ValueError('Pulse needs a password for the file')
   if not tokens: raise ValueError('Pulse needs a comma-separated list of tokens')
 
-
-  args = f"pdftotext -enc UTF-8 -simple2 -opw {pwd} {file} -".split()
-  result = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  text = result.stdout.decode('utf-8')
-  lines = [l for l in text.split("\n") if l]
+  lines = _extract_lines_from_file(file, pwd)
   tokens = _extract_tokens(tokens)
   tokenised_lines, _ = _tokenise_lines(lines, tokens)
 
@@ -30,9 +25,20 @@ def extract(**kwargs):
     outfile = _get_outfile(output, file)
     fw = open(outfile, 'a')
 
-  for line in _process_extract_lines(tokenised_lines):
+  for line in _process_lines(tokenised_lines):
     fw.write(f'{str(line)}\n')
   fw.close()
+
+
+def _extract_lines_from_file(file: str, pwd: str = "") -> list:
+  if not os.path.exists(file): raise FileExistsError(f'No such file: {file}')
+
+  args = f"pdftotext -enc UTF-8 -simple2 -opw {pwd} {file} -".split()
+  result = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  text = result.stdout.decode('utf-8')
+  lines = [l for l in text.split("\n") if l]
+
+  return lines
 
 
 def _get_outfile(output: str, file: str, extension : str = ".txt") -> str:
@@ -40,7 +46,7 @@ def _get_outfile(output: str, file: str, extension : str = ".txt") -> str:
   return outfile
 
 
-def _process_extract_lines(lines: dict):
+def _process_lines(lines: dict):
   encoder = SpaceEncoder()
   errors = []
   for group, lines in lines.items():
