@@ -10,9 +10,6 @@ class Commands(object):
   This is intended to act as a ETL with different data sources that get
   transformed into a format that can be loaded onto different databases for
   visualisation and housekeeping and so.
-
-  Not yet there, but soon
-  @see https://github.com/users/tanjarinne/projects/4/views/1
   """
   def __init__(
       self, inspect: bool = False, extract: bool = False,
@@ -30,8 +27,8 @@ class Commands(object):
 
   def extract(self, source:str, *arg, **kwargs) -> None:
     self.extract = True
-    parser = import_module(f'transctl.sources.{source.lower()}.cli')
-    result = parser.extract(*arg, **kwargs)
+    source = import_module(f'transctl.sources.{source.lower()}.cli')
+    result = source.extract(*arg, **kwargs)
     return result
 
 
